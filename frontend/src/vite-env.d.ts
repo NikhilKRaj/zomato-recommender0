@@ -2,6 +2,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_API_URL?: string;
+  readonly RAILWAY_API_URL?: string;
 }
 
 interface ImportMeta {
