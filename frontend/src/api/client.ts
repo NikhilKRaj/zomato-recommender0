@@ -6,11 +6,8 @@ import type {
   UserPreferences,
 } from "./types";
 
-const API_BASE = (
-  import.meta.env.VITE_API_URL ??
-  import.meta.env.RAILWAY_API_URL ??
-  "/api"
-).replace(/\/$/, "");
+/** Same-origin /api in production (Vercel proxy); Vite dev proxy locally. */
+const API_BASE = (import.meta.env.VITE_API_URL ?? "/api").replace(/\/$/, "");
 
 export class ApiClientError extends Error {
   constructor(
@@ -24,18 +21,26 @@ export class ApiClientError extends Error {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...init?.headers,
-    },
-    ...init,
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE}${path}`, {
+      headers: {
+        "Content-Type": "application/json",
+        ...init?.headers,
+      },
+      ...init,
+    });
+  } catch {
+    throw new ApiClientError(
+      "Could not connect to the backend API. Check that Railway is running and redeploy Vercel.",
+      0,
+    );
+  }
 
   const contentType = response.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) {
     throw new ApiClientError(
-      "Could not reach the backend API. Confirm RAILWAY_API_URL is set in Vercel and redeploy.",
+      "The backend API returned an unexpected response. Redeploy Vercel after setting RAILWAY_API_URL.",
       response.status,
     );
   }
@@ -53,7 +58,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
         : response.status === 400
           ? "Please check your preferences and try again."
           : response.status === 502
-            ? "The backend API is not configured. Set RAILWAY_API_URL in Vercel."
+            ? "The backend API is temporarily unavailable."
             : response.status === 503
               ? "The recommendation service is temporarily unavailable."
               : "Something went wrong. Please try again.";
@@ -73,3 +78,13 @@ export const api = {
       body: JSON.stringify(preferences),
     }),
 };
+
+export function getErrorMessage(error: unknown, fallback: string): string {
+  if (error instanceof ApiClientError) {
+    return error.message;
+  }
+  if (error instanceof Error && error.message && error.message !== "Load failed") {
+    return error.message;
+  }
+  return fallback;
+}

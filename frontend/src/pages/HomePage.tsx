@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-import { ApiClientError } from "@/api/client";
+import { ApiClientError, getErrorMessage } from "@/api/client";
 import type { UserPreferences } from "@/api/types";
 import { PageShell } from "@/components/layout/PageShell";
 import { PreferenceForm } from "@/components/preferences/PreferenceForm";
@@ -46,9 +46,10 @@ export function HomePage() {
 
       {metadata.isError && (
         <div className="mb-md rounded-lg border border-red-200 bg-red-50 p-sm text-body-md text-red-800" role="alert">
-          {metadata.error instanceof ApiClientError
-            ? metadata.error.message
-            : "Could not load filter options. Check that RAILWAY_API_URL is set in Vercel and redeploy."}
+          {getErrorMessage(
+            metadata.error,
+            "Could not load filter options. Redeploy Vercel and confirm Railway is running.",
+          )}
         </div>
       )}
 
@@ -81,7 +82,7 @@ export function HomePage() {
               className="rounded-xl border border-red-200 bg-red-50 p-md text-body-md text-red-800"
               role="alert"
             >
-              {recommendations.error.message}
+              {getErrorMessage(recommendations.error, "Something went wrong. Please try again.")}
             </div>
           )}
 
