@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#FAFAFA] text-on-surface font-sans antialiased;
+  }
+}
+
+@layer utilities {
+  .material-symbols-outlined {
+    font-family: "Material Symbols Outlined";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .star-filled {
+    font-variation-settings: "FILL" 1;
+    color: #f4a261;
+  }
+
+  .ai-sparkle {
+    font-variation-settings: "FILL" 1;
+    color: #e23744;
+  }
+
+  .slider-thumb {
+    @apply h-1 w-full cursor-pointer appearance-none rounded-lg bg-surface-variant;
+  }
+
+  .slider-thumb::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #e23744;
+    cursor: pointer;
+  }
+
+  .slider-thumb::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #e23744;
+    cursor: pointer;
+    border: none;
+  }
+}
