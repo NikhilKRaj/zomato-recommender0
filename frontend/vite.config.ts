@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  envPrefix: ["VITE_", "RAILWAY_"],
   plugins: [react()],
   resolve: {
     alias: {
