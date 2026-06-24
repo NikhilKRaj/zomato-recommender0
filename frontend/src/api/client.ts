@@ -6,11 +6,7 @@ import type {
   UserPreferences,
 } from "./types";
 
-const API_BASE = (
-  import.meta.env.VITE_API_URL ??
-  import.meta.env.RAILWAY_API_URL ??
-  "/api"
-).replace(/\/$/, "");
+const API_BASE = (import.meta.env.VITE_API_URL ?? "/api").replace(/\/$/, "");
 
 export class ApiClientError extends Error {
   constructor(
@@ -35,7 +31,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const contentType = response.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) {
     throw new ApiClientError(
-      "Could not reach the backend API. Set RAILWAY_API_URL in Vercel, add your Vercel URL to CORS_ORIGINS on Railway, and redeploy both services.",
+      "Could not reach the backend API. Check that RAILWAY_API_URL is set in Vercel and the Railway backend is running.",
       response.status,
     );
   }
