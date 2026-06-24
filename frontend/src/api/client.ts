@@ -28,6 +28,14 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     ...init,
   });
 
+  const contentType = response.headers.get("content-type") ?? "";
+  if (!contentType.includes("application/json")) {
+    throw new ApiClientError(
+      "Could not reach the backend API. Set RAILWAY_API_URL in Vercel and redeploy.",
+      response.status,
+    );
+  }
+
   if (!response.ok) {
     let detail: unknown;
     try {
@@ -40,9 +48,11 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
         ? "No restaurants match your filters. Try broadening your search."
         : response.status === 400
           ? "Please check your preferences and try again."
-          : response.status === 503
-            ? "The recommendation service is temporarily unavailable."
-            : "Something went wrong. Please try again.";
+          : response.status === 502
+            ? "The backend API is not configured. Set RAILWAY_API_URL in Vercel."
+            : response.status === 503
+              ? "The recommendation service is temporarily unavailable."
+              : "Something went wrong. Please try again.";
     throw new ApiClientError(message, response.status, detail);
   }
 
