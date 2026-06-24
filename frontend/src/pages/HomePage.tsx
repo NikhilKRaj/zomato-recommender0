@@ -46,8 +46,8 @@ export function HomePage() {
 
       {metadata.isError && (
         <div className="mb-md rounded-lg border border-red-200 bg-red-50 p-sm text-body-md text-red-800" role="alert">
-          Could not load filter options. Make sure the API is running at{" "}
-          <code className="text-sm">localhost:8000</code>.
+          Could not load filter options. Check that the backend API is deployed and{" "}
+          <code className="text-sm">RAILWAY_API_URL</code> is set in Vercel.
         </div>
       )}
 
