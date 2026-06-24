@@ -40,6 +40,17 @@ npm run build
 npm run preview
 ```
 
+## Deploy (Vercel)
+
+| Setting | Value |
+|---------|-------|
+| Root Directory | `frontend` |
+| Build Command | `npm run build` |
+| Output Directory | `dist` |
+| Env var | `VITE_API_URL=https://your-api.up.railway.app` |
+
+`vercel.json` is included for SPA routing. See [deployment-plan.md](../deployment-plan.md).
+
 ## Stack
 
 - React 18 + TypeScript + Vite
